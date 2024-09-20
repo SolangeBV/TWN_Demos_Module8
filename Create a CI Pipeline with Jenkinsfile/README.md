@@ -56,7 +56,25 @@
 - Goals: package (to build a jar file)
 
 ### c. Build Docker image
-- 
+- Create Dockerfile in java-maven-app
+- Take the same job from point b ("Build jar") > Configure > Build Steps
+- Add build step > Execute shell
+- ``docker build -t java-maven-app:1.0 . ``
+- Save
+- Build Now
 
 ### d. Push to private DockerHub repository
--
+- Create credentials for Docker Repository:
+  - Create Docker Hub Account (hub.docker.com) > Create repository > Visibility private > create
+  - Jenkins > Manage Jenkins > Credentials > System > Global credentials > Add credentials (dockerhub username and password)
+- Take the same job from point c ("Build Docker image")
+- Under "Build Environment" check "Use secret text(s) or file(s) -> Username and password (separated)
+  - Username Variable -> USERNAME
+  - Password Variable -> PASSWORD
+  - Credentials -> docker-hub-repo credentials
+- Modify the following line in the Command:
+  ``docker build -t myUsernameOnDockerHub-demo-app:jma-1.0 .``
+  ``docker login -u $USERNAME -p $PASSWORD``
+  ``docker push myUsernameOnDockerHub-demo-app:jma-1.0``
+- Save
+- Build Now
