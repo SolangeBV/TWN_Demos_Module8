@@ -13,7 +13,19 @@
   - ``apt install nodejs`` -> execute this to install npm and node
 
 ## Make Docker available on Jenkins server
-- 8.6
+- We need to mount docker runtime onto the Jenkins Container on the remote server
+- Stop the container running on remote server: ``docker stop containerId``
+- Restart the container with extra mounted volumes ``docker run -p 8080:8080 -p 50000:50000 -d``
+  ``-v jenkins_home:/var/jenkins_home`` -> use jenkins_home volumes on the container
+  ``-v /var/run/docker.sock:/var/run/docker.sock`` -> mount volumes on the host machine
+  ``jenkins/jenkins:lts``
+- On the remote server, run ``docker exec -u 0 -it containerId bash``
+- fetch the latest version of docker:
+  ``curl https://get.docker.com/ > dockerinstall && chmod 777 dockerinstall && ./dockerinstall``
+- Set read and write permissions for the jenkins user on the docker.sock file (this is a Unix socket file used by the Docker daemon to communicate with the Docker client):
+  ``chmod 666 /var/run/docker.sock``
+- log in now as jenkins user: ``exit`` + ``docker exec -it containerId bash``
+- ``docker pull redis`` -> it will pull the image
 
 ## Create Jenkins credentials for a git repository
 - Jenkins Dashboard > my-job > Configuration > Source Code Management > Git
@@ -44,7 +56,7 @@
 - Goals: package (to build a jar file)
 
 ### c. Build Docker image
--
+- 
 
 ### d. Push to private DockerHub repository
 -
